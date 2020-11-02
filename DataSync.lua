@@ -2,42 +2,36 @@
 -- Include
 --=========
 
-local lib_path = Lib.curPath()
-local lib_dep = Lib.curDepencies()
-
-local Class = lib_dep.Class or error('')
----@type HandleLib
-local HandleLib = lib_dep.Handle or error('')
-local Trigger = HandleLib.Trigger or error('')
----@type UtilsLib
-local UtilsLib = lib_dep.Utils or error('')
-local ActionList = UtilsLib.ActionList or error('')
-local isTypeErr = UtilsLib.isTypeErr or error('')
-local Log = UtilsLib.Log or error('')
+local Class = LibManager.getDepency('LuaClass')
+---@type Wc3Utils
+local Utils = LibManager.getDepency('Wc3Utils')
+local ActionList = Utils.ActionList or error('')
+local isTypeErr = Utils.isTypeErr or error('')
+local Log = Utils.Log or error('')
 
 --=======
 -- Class
 --=======
 
-local InputDataSync = Class.new('InputDataSync')
----@class InputDataSync
-local public = InputDataSync.public
----@class InputDataSyncClass
-local static = InputDataSync.static
----@type InputDataSyncClass
-local override = InputDataSync.override
+local Wc3InputDataSync = Class.new('Wc3InputDataSync')
+---@class Wc3InputDataSync
+local public = Wc3InputDataSync.public
+---@class Wc3InputDataSyncClass
+local static = Wc3InputDataSync.static
+---@type Wc3InputDataSyncClass
+local override = Wc3InputDataSync.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child InputDataSync | nil
----@return InputDataSync
+---@param child Wc3InputDataSync | nil
+---@return Wc3InputDataSync
 function override.new(child)
-    if child then isTypeErr(child, InputDataSync, 'child') end
+    if child then isTypeErr(child, Wc3InputDataSync, 'child') end
 
-    local instance = child or Class.allocate(InputDataSync)
+    local instance = child or Class.allocate(Wc3InputDataSync)
     private.newData(instance)
 
     return instance
@@ -52,9 +46,9 @@ function public:send(msg)
     BlzSendSyncData(private.data[self].id, msg)
 end
 
----@alias InputDataSyncCallback fun(sync:InputDataSync, data:string, source:player)
+---@alias Wc3InputDataSyncCallback fun(sync:Wc3InputDataSync, data:string, source:player)
 
----@param callback InputDataSyncCallback
+---@param callback Wc3InputDataSyncCallback
 ---@return Action
 function public:addAction(callback)
     local priv = private.data[self]
@@ -75,7 +69,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.id2obj = setmetatable({}, {__mode = 'v'})
 
----@param self InputDataSync
+---@param self Wc3InputDataSync
 function private.newData(self)
     local priv = {
         id = private.getId(),
@@ -86,7 +80,7 @@ function private.newData(self)
 
     -- Adds event to trigger
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
-        private.trigger:addPlayerSyncEvent(Player(i), priv.id, false)
+        BlzTriggerRegisterPlayerSyncEvent(private.trigger, Player(i), priv.id, false)
     end
 end
 
@@ -134,9 +128,9 @@ function private.runActions()
     private.data[self].actions:run(self, data, player)
 end
 
-if not IsCompiletime() then
-    private.trigger = Trigger.new()
-    private.trigger:addAction(private.runActions)
+if IsGame() then
+    private.trigger = CreateTrigger()
+    TriggerAddAction(private.trigger, private.runActions)
 end
 
 return static

@@ -2,22 +2,16 @@
 -- Include
 --=========
 
-local lib_path = Lib.curPath()
-local lib_dep = Lib.curDepencies()
-
----@type HandleLib
-local HandleLib = lib_dep.Handle or error('')
-local Trigger = HandleLib.Trigger or error('')
----@type UtilsLib
-local UtilsLib = lib_dep.Utils or error('')
-local ActionList = UtilsLib.ActionList or error('')
-local Log = UtilsLib.Log or error('')
+---@type Wc3Utils
+local Utils = LibManager.getDepency('Wc3Utils')
+local ActionList = Utils.ActionList or error('')
+local Log = Utils.Log or error('')
 
 --========
 -- Module
 --========
 
----@class InputKeyboard
+---@class Wc3InputKeyboard
 local Keyboard = {}
 
 local key2data = {
@@ -66,12 +60,11 @@ end
 
 local actions = {}
 local is_key_down = {}
-local trigger
 
----@alias InputKeyboardCallback fun(key:string, is_down:boolean, pl:player)
+---@alias Wc3InputKeyboardCallback fun(key:string, is_down:boolean, pl:player)
 
 ---@param key string
----@param callback InputKeyboardCallback
+---@param callback Wc3InputKeyboardCallback
 ---@return Action
 function Keyboard.addAction(key, callback)
     local key_data = key2data[key]
@@ -112,17 +105,17 @@ local function runActions()
     is_key_down[key_data] = is_down
 end
 
-if not IsCompiletime() then
-    trigger = Trigger.new()
-    trigger:addAction(runActions)
+if IsGame() then
+    local trigger = CreateTrigger()
+    TriggerAddAction(trigger, runActions)
 
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         local pl = Player(i)
         if GetPlayerController(pl) == MAP_CONTROL_USER and
            GetPlayerSlotState(pl) == PLAYER_SLOT_STATE_PLAYING then
             for key, key_data in pairs(key2data) do
-                trigger:addPlayerKeyEvent(pl, key_data, 0, true)
-                trigger:addPlayerKeyEvent(pl, key_data, 0, false)
+                BlzTriggerRegisterPlayerKeyEvent(trigger, pl, key_data, 0, true)
+                BlzTriggerRegisterPlayerKeyEvent(trigger, pl, key_data, 0, false)
             end
         end
     end

@@ -2,21 +2,17 @@
 -- Include
 --=========
 
----@type HandleLib
-local HandleLib = require(LibList.HandleLib) or error('')
-local Trigger = HandleLib.Trigger
-local Unit = HandleLib.Unit
----@type UtilsLib
-local UtilsLib = require(LibList.UtilsLib) or error('')
-local ActionList = UtilsLib.ActionList or error('')
+---@type Wc3Utils
+local Utils = LibManager.getDepency('Wc3Utils')
+local ActionList = Utils.ActionList or error('')
 
 --========
 -- Module
 --========
 
----@alias InputSelectionCallback fun(group:table<number, Unit>, pl:player)
+---@alias Wc3InputSelectionCallback fun(group:table<number, unit>, pl:player)
 
----@class InputSelection
+---@class Wc3InputSelection
 local Selection = {}
 
 local lock = false
@@ -37,7 +33,7 @@ end
 
 local function onSelection()
     local pl = GetTriggerPlayer()
-    local u = Unit.getLinked(GetTriggerUnit())
+    local u = GetTriggerUnit()
     local gr = group[pl]
 
     if not u then return end
@@ -52,7 +48,7 @@ local function onSelection()
 
     if lock then
         if found < 0 and pl == GetLocalPlayer() then
-            SelectUnit(u:getData(), false)
+            SelectUnit(u, false)
         end
     else
         if found < 0 then
@@ -64,7 +60,7 @@ end
 
 local function onDeselection()
     local pl = GetTriggerPlayer()
-    local u = Unit.getLinked(GetTriggerUnit())
+    local u = GetTriggerUnit()
     local gr = group[pl]
 
     if not u then return end
@@ -79,7 +75,7 @@ local function onDeselection()
 
     if lock then
         if found < 0 and pl == GetLocalPlayer() then
-            SelectUnit(u:getData(), true)
+            SelectUnit(u, true)
         end
     else
         if found > 0 then
@@ -104,7 +100,7 @@ function Selection.lock(flag, pl)
 
     local gr = group[pl]
     for i = 1, #gr do
-        SelectUnit(gr[i]:getData(), true)
+        SelectUnit(gr[i], true)
     end
 end
 
@@ -120,20 +116,22 @@ function Selection.removeAction(action)
     return actions:remove(action)
 end
 
-if not IsCompiletime() then
-    local trigger_select = Trigger.new()
-    local trigger_deselect = Trigger.new()
+if IsGame() then
+    local trigger_select = CreateTrigger()
+    TriggerAddAction(trigger_select, onSelection)
+
+    local trigger_deselect = CreateTrigger()
+    TriggerAddAction(trigger_deselect, onDeselection)
+
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         local pl = Player(i)
         if GetPlayerController(pl) == MAP_CONTROL_USER and
            GetPlayerSlotState(pl) == PLAYER_SLOT_STATE_PLAYING then
             group[pl] = {}
-            trigger_select:addPlayerUnitEvent(EVENT_PLAYER_UNIT_SELECTED, pl)
-            trigger_deselect:addPlayerUnitEvent(EVENT_PLAYER_UNIT_DESELECTED, pl)
+            TriggerRegisterPlayerUnitEvent(trigger_select, pl, EVENT_PLAYER_UNIT_SELECTED)
+            TriggerRegisterPlayerUnitEvent(trigger_deselect, pl, EVENT_PLAYER_UNIT_DESELECTED)
         end
     end
-    trigger_select:addAction(onSelection)
-    trigger_deselect:addAction(onDeselection)
 end
 
 return Selection

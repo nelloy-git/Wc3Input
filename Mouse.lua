@@ -2,19 +2,11 @@
 -- Include
 --=========
 
-local lib_path = Lib.curPath()
-local lib_dep = Lib.curDepencies()
-
----@type HandleLib
-local HandleLib = lib_dep.Handle or error('')
-local Trigger = HandleLib.Trigger or error('')
-local Timer = HandleLib.Timer or error('')
-
 --========
 -- Module
 --========
 
----@class InputMouse
+---@class Wc3InputMouse
 local Mouse = {}
 
 local period = 1/32
@@ -54,21 +46,22 @@ function Mouse.getY(pl)
     return y[pl or GetLocalPlayer()]
 end
 
-if not IsCompiletime() then
-    local trigger = Trigger.new()
+if IsGame() then
+    local trigger = CreateTrigger()
+    TriggerAddAction(trigger, onMouseEvent)
+
     for i = 0, bj_MAX_PLAYER_SLOTS - 1 do
         local pl = Player(i)
         if GetPlayerController(pl) == MAP_CONTROL_USER and
            GetPlayerSlotState(pl) == PLAYER_SLOT_STATE_PLAYING then
-            trigger:addPlayerEvent(EVENT_PLAYER_MOUSE_MOVE, pl)
-            trigger:addPlayerEvent(EVENT_PLAYER_MOUSE_UP, pl)
-            trigger:addPlayerEvent(EVENT_PLAYER_MOUSE_DOWN, pl)
+            TriggerRegisterPlayerEvent(trigger, pl, EVENT_PLAYER_MOUSE_MOVE)
+            TriggerRegisterPlayerEvent(trigger, pl, EVENT_PLAYER_MOUSE_UP)
+            TriggerRegisterPlayerEvent(trigger, pl, EVENT_PLAYER_MOUSE_DOWN)
         end
     end
-    trigger:addAction(onMouseEvent)
 
-    local timer = Timer.new()
-    timer:start(period, true, onLoop)
+    local timer = CreateTimer()
+    TimerStart(timer, period, true, onLoop)
 end
 
 return Mouse

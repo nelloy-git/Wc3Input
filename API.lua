@@ -1,35 +1,38 @@
----@class InputLib
-local InputLibAPI = {}
-Lib.start('Input', {
-    Class = Lib.load(LibList.ClassLib) or error(''),
-    Handle = Lib.load(LibList.HandleLib) or error(''),
-    Utils = Lib.load(LibList.UtilsLib) or error(''),
-})
-local path = Lib.curPath()
+LibManager.startLib('Wc3Input')
+
+--===========
+-- Depencies
+--===========
+
+LibManager.addDepency('LuaClass', 'https://github.com/nelloy-git/LuaClass.git')
+LibManager.addDepency('Wc3Utils', 'https://github.com/nelloy-git/Wc3Utils.git')
 
 --=====
 -- API
 --=====
 
----@type InputDataSync
-InputLibAPI.DataSync = require(path..'DataSync') or error('')
+---@class Wc3Input
+local Wc3Input = {}
 
----@type InputKeyboard
-local Keyboard = require(path..'Keyboard') or error('')
-InputLibAPI.addKeyboardAction = Keyboard.addAction or error('')
-InputLibAPI.removeKeyboardAction = Keyboard.removeAction or error('')
+---@type Wc3InputDataSync
+Wc3Input.DataSync = require('DataSync') or error('')
 
----@type InputMouse
-local Mouse = require(path..'Mouse') or error('')
-InputLibAPI.getMouseX = Mouse.getX or error('')
-InputLibAPI.getMouseY = Mouse.getY or error('')
+---@type Wc3InputKeyboard
+local Keyboard = require('Keyboard') or error('')
+Wc3Input.addKeyboardAction = Keyboard.addAction or error('')
+Wc3Input.removeKeyboardAction = Keyboard.removeAction or error('')
 
----@type InputSelection
-local Selection = require(path..'Selection') or error('')
-InputLibAPI.addSelectionAction = Selection.addAction or error('')
-InputLibAPI.removeSelectionAction = Selection.removeAction or error('')
-InputLibAPI.lockSelection = Selection.lock or error('')
+---@type Wc3InputMouse
+local Mouse = require('Mouse') or error('')
+Wc3Input.getMouseX = Mouse.getX or error('')
+Wc3Input.getMouseY = Mouse.getY or error('')
 
-Lib.finish()
+---@type Wc3InputSelection
+local Selection = require('Selection') or error('')
+Wc3Input.addSelectionAction = Selection.addAction or error('')
+Wc3Input.removeSelectionAction = Selection.removeAction or error('')
+Wc3Input.lockSelection = Selection.lock or error('')
 
-return InputLibAPI
+LibManager.endLib()
+
+return Wc3Input
