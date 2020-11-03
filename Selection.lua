@@ -104,7 +104,7 @@ function Selection.lock(flag, pl)
     end
 end
 
----@param callback InputSelectionCallback
+---@param callback Wc3InputSelectionCallback
 ---@return Action
 function Selection.addAction(callback)
     return actions:add(callback)
