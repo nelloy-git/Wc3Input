@@ -13,25 +13,25 @@ local Log = Utils.Log or error('')
 -- Class
 --=======
 
-local Wc3InputDataSync = Class.new('Wc3InputDataSync')
----@class Wc3InputDataSync
-local public = Wc3InputDataSync.public
----@class Wc3InputDataSyncClass
-local static = Wc3InputDataSync.static
----@type Wc3InputDataSyncClass
-local override = Wc3InputDataSync.override
+local InputDataSync = Class.new('InputDataSync')
+---@class InputDataSync
+local public = InputDataSync.public
+---@class InputDataSyncClass
+local static = InputDataSync.static
+---@type InputDataSyncClass
+local override = InputDataSync.override
 local private = {}
 
 --=========
 -- Static
 --=========
 
----@param child Wc3InputDataSync | nil
----@return Wc3InputDataSync
+---@param child InputDataSync | nil
+---@return InputDataSync
 function override.new(child)
-    if child then isTypeErr(child, Wc3InputDataSync, 'child') end
+    if child then isTypeErr(child, InputDataSync, 'child') end
 
-    local instance = child or Class.allocate(Wc3InputDataSync)
+    local instance = child or Class.allocate(InputDataSync)
     private.newData(instance)
 
     return instance
@@ -46,9 +46,9 @@ function public:send(msg)
     BlzSendSyncData(private.data[self].id, msg)
 end
 
----@alias Wc3InputDataSyncCallback fun(sync:Wc3InputDataSync, data:string, source:player)
+---@alias InputDataSyncCallback fun(sync:InputDataSync, data:string, source:player)
 
----@param callback Wc3InputDataSyncCallback
+---@param callback InputDataSyncCallback
 ---@return Action
 function public:addAction(callback)
     local priv = private.data[self]
@@ -69,7 +69,7 @@ end
 private.data = setmetatable({}, {__mode = 'k'})
 private.id2obj = setmetatable({}, {__mode = 'v'})
 
----@param self Wc3InputDataSync
+---@param self InputDataSync
 function private.newData(self)
     local priv = {
         id = private.getId(),

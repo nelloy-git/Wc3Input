@@ -6,7 +6,7 @@
 -- Module
 --========
 
----@class Wc3InputMouse
+---@class InputMouse
 local Mouse = {}
 
 local period = 1/32

@@ -10,9 +10,9 @@ local ActionList = Utils.ActionList or error('')
 -- Module
 --========
 
----@alias Wc3InputSelectionCallback fun(group:table<number, unit>, pl:player)
+---@alias InputSelectionCallback fun(group:table<number, unit>, pl:player)
 
----@class Wc3InputSelection
+---@class InputSelection
 local Selection = {}
 
 local lock = false
@@ -104,7 +104,7 @@ function Selection.lock(flag, pl)
     end
 end
 
----@param callback Wc3InputSelectionCallback
+---@param callback InputSelectionCallback
 ---@return Action
 function Selection.addAction(callback)
     return actions:add(callback)

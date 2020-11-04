@@ -61,10 +61,10 @@ end
 local actions = {}
 local is_key_down = {}
 
----@alias Wc3InputKeyboardCallback fun(key:string, is_down:boolean, pl:player)
+---@alias InputKeyboardCallback fun(key:string, is_down:boolean, pl:player)
 
 ---@param key string
----@param callback Wc3InputKeyboardCallback
+---@param callback InputKeyboardCallback
 ---@return Action
 function Keyboard.addAction(key, callback)
     local key_data = key2data[key]
