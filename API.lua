@@ -17,15 +17,13 @@ local Wc3Input = {}
 ---@type InputDataSync
 Wc3Input.DataSync = require('DataSync') or error('')
 
----@type Wc3InputKeyboard
+---@type InputKeyboard
 local Keyboard = require('Keyboard') or error('')
 Wc3Input.addKeyboardAction = Keyboard.addAction or error('')
 Wc3Input.removeKeyboardAction = Keyboard.removeAction or error('')
 
 ---@type InputMouse
-local Mouse = require('Mouse') or error('')
-Wc3Input.getMouseX = Mouse.getX or error('')
-Wc3Input.getMouseY = Mouse.getY or error('')
+Wc3Input.Mouse = require('Mouse') or error('')
 
 ---@type InputSelection
 local Selection = require('Selection') or error('')

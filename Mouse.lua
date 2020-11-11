@@ -77,7 +77,7 @@ function Mouse.getY(pl)
     return y[pl or GetLocalPlayer()]
 end
 
----@alias InputMouseCallback fun(event:string, pl:player, button:mousebuttontype | nil)
+---@alias InputMouseCallback fun(event:string, pl:player, btn:mousebuttontype | nil)
 
 ---@param event string | "'UP'" | "'DOWN'" | "'MOVE'"
 ---@param callback InputMouseCallback

@@ -11,7 +11,7 @@ local Log = Utils.Log or error('')
 -- Module
 --========
 
----@class Wc3InputKeyboard
+---@class InputKeyboard
 local Keyboard = {}
 
 local key2data = {

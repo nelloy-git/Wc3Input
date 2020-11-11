@@ -5,6 +5,7 @@
 local Class = LibManager.getDepency('LuaClass')
 ---@type Wc3Utils
 local Utils = LibManager.getDepency('Wc3Utils')
+local Action = Utils.Action or error('')
 local ActionList = Utils.ActionList or error('')
 local isTypeErr = Utils.isTypeErr or error('')
 local Log = Utils.Log or error('')
@@ -29,7 +30,7 @@ local private = {}
 ---@param child InputDataSync | nil
 ---@return InputDataSync
 function override.new(child)
-    if child then isTypeErr(child, InputDataSync, 'child') end
+    isTypeErr(child, {InputDataSync, 'nil'}, 'child')
 
     local instance = child or Class.allocate(InputDataSync)
     private.newData(instance)
@@ -43,6 +44,9 @@ end
 
 ---@param msg string
 function public:send(msg)
+    isTypeErr(self, InputDataSync, 'self')
+    isTypeErr(msg, 'string', 'msg')
+
     BlzSendSyncData(private.data[self].id, msg)
 end
 
@@ -51,14 +55,20 @@ end
 ---@param callback InputDataSyncCallback
 ---@return Action
 function public:addAction(callback)
+    isTypeErr(self, InputDataSync, 'self')
+    isTypeErr(callback, 'function', 'callback')
     local priv = private.data[self]
+
     return priv.actions:add(callback)
 end
 
 ---@param action Action
 ---@return boolean
 function public:removeAction(action)
+    isTypeErr(self, InputDataSync, 'self')
+    isTypeErr(action, Action, 'action')
     local priv = private.data[self]
+    
     return priv.actions:remove(action)
 end
 
@@ -122,6 +132,8 @@ end
 
 function private.runActions()
     local self = private.id2obj[BlzGetTriggerSyncPrefix()]
+    if not self then return end
+
     local player = GetTriggerPlayer()
     local data = BlzGetTriggerSyncData()
 
