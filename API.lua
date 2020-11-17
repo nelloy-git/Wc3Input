@@ -18,9 +18,9 @@ local Wc3Input = {}
 Wc3Input.DataSync = require('DataSync') or error('')
 
 ---@type InputKeyboard
-local Keyboard = require('Keyboard') or error('')
-Wc3Input.addKeyboardAction = Keyboard.addAction or error('')
-Wc3Input.removeKeyboardAction = Keyboard.removeAction or error('')
+Wc3Input.Keyboard = require('Keyboard') or error('')
+--Wc3Input.addKeyboardAction = Keyboard.addAction or error('')
+--Wc3Input.removeKeyboardAction = Keyboard.removeAction or error('')
 
 ---@type InputMouse
 Wc3Input.Mouse = require('Mouse') or error('')

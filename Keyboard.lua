@@ -3,9 +3,9 @@
 --=========
 
 ---@type Wc3Utils
-local Utils = LibManager.getDepency('Wc3Utils')
-local ActionList = Utils.ActionList or error('')
-local Log = Utils.Log or error('')
+local Wc3Utils = LibManager.getDepency('Wc3Utils')
+local ActionList = Wc3Utils.ActionList or error('')
+local Log = Wc3Utils.Log or error('')
 
 --========
 -- Module
@@ -61,7 +61,7 @@ end
 local actions = {}
 local is_key_down = {}
 
----@alias InputKeyboardCallback fun(key:string, is_down:boolean, pl:player)
+---@alias InputKeyboardCallback fun(key:string, is_down:boolean, meta:number, pl:player)
 
 ---@param key string
 ---@param callback InputKeyboardCallback
@@ -94,13 +94,14 @@ local function runActions()
     local pl = GetTriggerPlayer()
     local key_data = BlzGetTriggerPlayerKey()
     local is_down = BlzGetTriggerPlayerIsKeyDown()
+    local meta = BlzGetTriggerPlayerMetaKey()
 
     if is_down == is_key_down[key_data] then
         return
     end
 
     if actions[key_data] then
-        actions[key_data]:run(data2key[key_data], is_down, pl)
+        actions[key_data]:run(data2key[key_data], is_down, meta, pl)
     end
     is_key_down[key_data] = is_down
 end
