@@ -10,8 +10,6 @@ local ActionList = Utils.ActionList or error('')
 -- Module
 --========
 
----@alias InputSelectionCallback fun(group:table<number, unit>, pl:player)
-
 ---@class InputSelection
 local Selection = {}
 
@@ -103,6 +101,8 @@ function Selection.lock(flag, pl)
         SelectUnit(gr[i], true)
     end
 end
+
+---@alias InputSelectionCallback fun(group:table<number, unit>, pl:player)
 
 ---@param callback InputSelectionCallback
 ---@return Action
